@@ -14,7 +14,5 @@ class BankCardType {
         lengths = json['lengths'] as List<int>;
 
   @override
-  String toString() {
-    return type;
-  }
+  String toString() => type;
 }

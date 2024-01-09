@@ -12,21 +12,19 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wallet/data/repositories/asset_data.dart';
-// import 'package:wallet/data/repositories/shared_prefs.dart';
-import 'package:wallet/utils/utils.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  test('Readme', () async {
+    var readme = await AssetData.getReadme();
+    expect(readme.isNotEmpty, true);
+  });
+
   // test('Saved Cards', () async {
   //   WidgetsFlutterBinding.ensureInitialized();
   //   var savedCards = await SharedPrefs.saveCardList([]);
   //   // expect(savedCards == null, false);
   //   // printList(savedCards);
   // });
-
-  test('Sample Cards', () async {
-    WidgetsFlutterBinding.ensureInitialized();
-    var sampleCards = await AssetData.getSampleCards();
-    expect(sampleCards.isEmpty, false);
-    printList(sampleCards);
-  });
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:wallet/configs/styles.dart';
+import 'package:wallet/app/styles.dart';
 import 'package:wallet/data/redux/state.dart';
 import 'package:wallet/pages/wallet_page/bank_card_tile.dart';
 import 'package:wallet/pages/wallet_page/new_bank_card_tile.dart';
@@ -55,7 +55,7 @@ class _CardListState extends State<CardList> {
             controller: _scrollController,
             scrollDirection: Axis.vertical,
             children: [
-              const NewBankCardTile(),
+              if (state.cards.isEmpty) const NewBankCardTile(),
               ...state.cards.map((c) => BankCardTile(c)).toList().reversed,
             ],
           );

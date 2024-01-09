@@ -1,79 +1,84 @@
+import 'package:wallet/data/models/bank_card.dart';
 import 'package:wallet/data/redux/actions.dart';
 import 'package:wallet/data/redux/state.dart';
-import 'package:wallet/data/repositories/asset_data.dart';
 import 'package:wallet/data/repositories/shared_prefs.dart';
 import 'package:redux/redux.dart';
-import 'package:wallet/utils/utils.dart';
+import 'package:wallet/app/utils.dart';
 
-// print action before sending it on
+// print action before sending it to next
 void loggingMiddleware(Store<AppState> store, dynamic action, NextDispatcher next) {
   debug('++ Action: $action');
   next(action);
 }
 
-// map actions to functions
-void appStateMiddleware(Store<AppState> store, dynamic action, NextDispatcher next) async {
-  next(action);
+// this middleware handles input actions and does not pass handled actions to next
+void appStateMiddleware(Store<AppState> store, dynamic action, NextDispatcher next) {
   switch (action.runtimeType) {
-    case RemoveAllCards:
-      _removeAllCards(store);
+    // Cards
     case AddCard:
       _addCard(store, action);
     case RemoveCard:
       _removeCard(store, action);
-    case UpdateCardlist:
-      await _updateCardList(store, action);
+    case UpdateCardList:
+      _updateCardList(store, action); // unawaited
+    // Banned
     case AddBannedCountry:
       _addBannedCountry(store, action);
     case RemoveBannedCountry:
       _removeBannedCountry(store, action);
     case UpdateBannedList:
-      await _updateBannedList(store, action);
+      _updateBannedList(store, action); // unawaited
+    // Samples
     case LoadSampleData:
-      await _loadSampleData(store);
-    case LoadSharedPrefs:
-      await _loadSharedPrefs(store);
+      _loadSampleData(store);
+    // Saved
+    case LoadSavedData:
+      _loadSavedData(store); // unawaited
+    default:
+      next(action);
   }
 }
 
-Future<void> _loadSampleData(Store<AppState> store) async {
-  store.dispatch(UpdateCardlist(await AssetData.getSampleCards()));
-  store.dispatch(UpdateBannedList(await AssetData.getSampleBannedCountries()));
+_loadSampleData(Store<AppState> store) {
+  store.dispatch(AddCard(BankCard.sample()));
+  store.dispatch(AddBannedCountry("United States"));
 }
 
-Future<void> _loadSharedPrefs(Store<AppState> store) async {
-  store.dispatch(UpdateCardlist(await SharedPrefs.fetchCardList()));
+_loadSavedData(Store<AppState> store) async {
+  store.dispatch(UpdateCardList(await SharedPrefs.fetchCardList()));
   store.dispatch(UpdateBannedList(await SharedPrefs.fetchBannedList()));
 }
 
-Future<void> _updateCardList(Store<AppState> store, UpdateCardlist action) async {
+_updateCardList(Store<AppState> store, UpdateCardList action) async {
   await SharedPrefs.saveCardList(action.cards);
+  store.dispatch(CardListUpdated(action.cards));
 }
 
-Future<void> _updateBannedList(Store<AppState> store, UpdateBannedList action) async {
+_updateBannedList(Store<AppState> store, UpdateBannedList action) async {
   await SharedPrefs.saveBannedList(action.bannedCountries);
+  store.dispatch(BannedListUpdated(action.bannedCountries));
 }
 
-void _removeAllCards(Store<AppState> store) {
-  store.dispatch(UpdateCardlist([]));
-}
-
-void _addCard(Store<AppState> store, AddCard action) {
+_addCard(Store<AppState> store, AddCard action) {
   // check if card already exists
-  if (store.state.cards.contains(action.card)) return;
-  store.dispatch(UpdateCardlist(List.from(store.state.cards)..add(action.card)));
+  if (store.state.cards.map((c) => c.number).toList().contains(action.card.number)) return;
+  // add to new cards list
+  store.dispatch(NewCardListUpdated(List.from(store.state.newCards)..add(action.card)));
+  store.dispatch(UpdateCardList(List.from(store.state.cards)..add(action.card)));
 }
 
-void _removeCard(Store<AppState> store, RemoveCard action) {
-  store.dispatch(UpdateCardlist(List.from(store.state.cards)..removeWhere((c) => c.number == action.card.number)));
+_removeCard(Store<AppState> store, RemoveCard action) {
+  store.dispatch(
+      NewCardListUpdated(List.from(store.state.newCards)..removeWhere((c) => c.number == action.card.number)));
+  store.dispatch(UpdateCardList(List.from(store.state.cards)..removeWhere((c) => c.number == action.card.number)));
 }
 
-void _addBannedCountry(Store<AppState> store, AddBannedCountry action) {
+_addBannedCountry(Store<AppState> store, AddBannedCountry action) {
   // check if country already exists
   if (store.state.bannedCountries.contains(action.country)) return;
   store.dispatch(UpdateBannedList(List.from(store.state.bannedCountries)..add(action.country)));
 }
 
-void _removeBannedCountry(Store<AppState> store, RemoveBannedCountry action) {
+_removeBannedCountry(Store<AppState> store, RemoveBannedCountry action) {
   store.dispatch(UpdateBannedList(List.from(store.state.bannedCountries)..removeWhere((c) => c == action.country)));
 }

@@ -1,6 +1,20 @@
 class Constants {
+  // app display name
   static const String appName = 'Wallet';
 
+  // menu features
+  static const bool featureBannedCountries = true;
+  static const bool featureLoadSampleData = true;
+  static const bool featureReademe = true;
+
+  // menu features to list
+  static const List<bool> menuFeatures = [
+    Constants.featureBannedCountries,
+    Constants.featureLoadSampleData,
+    Constants.featureReademe,
+  ];
+
+  // available countries
   static const allCountries = [
     "Afghanistan",
     "Albania",

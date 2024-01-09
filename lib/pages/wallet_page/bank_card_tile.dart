@@ -1,5 +1,9 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:wallet/app/styles.dart';
+import 'package:wallet/app/utils.dart';
 import 'package:wallet/data/models/bank_card.dart';
 import 'package:wallet/data/redux/actions.dart';
 import 'package:wallet/data/redux/state.dart';
@@ -21,121 +25,110 @@ class BankCardTile extends StatelessWidget {
         ));
       },
       child: Container(
-        margin: const EdgeInsets.only(left: 20, right: 20, bottom: 15),
-        padding: const EdgeInsets.all(20),
+        height: Styles.cardHeight,
+        margin: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
+        padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(15)),
-          border: Border.all(color: const Color.fromARGB(255, 140, 120, 94)),
-          color: const Color.fromARGB(255, 232, 223, 214),
+          border: Border.all(color: Styles.cardBorderColor),
+          color: Styles.cardBackgroundColor,
         ),
-        child: Column(
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Icon(Icons.credit_card),
-                const SizedBox(width: 10),
-                Text(card.type),
-              ],
-            ),
-            const SizedBox(height: 5),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Icon(Icons.numbers),
-                const SizedBox(width: 10),
-                Text(card.number),
-              ],
-            ),
-            const SizedBox(height: 5),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Icon(Icons.abc),
-                const SizedBox(width: 10),
-                Text(card.ccv),
-              ],
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Icon(Icons.circle_outlined),
-                const SizedBox(width: 10),
-                Text(card.country),
-              ],
-            ),
-          ],
-        ),
+        child: BankCardTileView(card: card),
       ),
     );
   }
 }
 
-class BankCardTileD extends StatelessWidget {
-  const BankCardTileD(this.card, {super.key});
+class BankCardTileView extends StatelessWidget {
+  const BankCardTileView({super.key, required this.card});
+
   final BankCard card;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(left: 20, right: 20, bottom: 15),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(15)),
-        border: Border.all(color: const Color.fromARGB(255, 140, 120, 94)),
-        color: const Color.fromARGB(255, 232, 223, 214),
-      ),
-      // child: Row(
-      //   children: [
-      //     Column(
-      //       crossAxisAlignment: CrossAxisAlignment.start,
-      //       children: [Icon(Icons.credit_card), Icon(Icons.numbers)],
-      //     ),
-      //     SizedBox(width: 10),
-      //     Column(
-      //       crossAxisAlignment: CrossAxisAlignment.start,
-      //       children: [Text(card.type), Text(card.number)],
-      //     ),
-      //   ],
-      // ),
-      child: Column(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Icon(Icons.credit_card),
-              const SizedBox(width: 10),
-              Text(card.type),
-            ],
+    return Stack(
+      children: [
+        // Top-left corner widget
+        Positioned(top: 0, left: 0, child: CardTypeWidget(card: card)),
+        // Top-right corner widget
+        Positioned(top: 0, right: 0, child: CardAliasWidget(card: card)),
+        // Bottom-left corner widget
+        Positioned(bottom: 0, left: 0, child: CardCountryWidget(card: card)),
+        // Bottom-right corner widget
+        Positioned(bottom: 0, right: 0, child: CardCCVWidget(card: card)),
+        // Center widget
+        Center(
+          child: SizedBox(
+            width: double.maxFinite,
+            child: CardNumberWidget(card: card),
           ),
-          const SizedBox(height: 5),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Icon(Icons.numbers),
-              const SizedBox(width: 10),
-              Text(card.number),
-            ],
-          ),
-          const SizedBox(height: 5),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Icon(Icons.abc),
-              const SizedBox(width: 10),
-              Text(card.ccv),
-            ],
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Icon(Icons.circle_outlined),
-              const SizedBox(width: 10),
-              Text(card.country),
-            ],
-          ),
-        ],
-      ),
+        ),
+      ],
     );
+  }
+}
+
+class CardTypeWidget extends StatelessWidget {
+  const CardTypeWidget({super.key, required this.card});
+  final BankCard card;
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        const Icon(Icons.credit_card, size: 30),
+        const SizedBox(width: 10),
+        Text(card.type, style: TextStyle(fontSize: 18)),
+      ],
+    );
+  }
+}
+
+class CardNumberWidget extends StatelessWidget {
+  const CardNumberWidget({super.key, required this.card});
+  final BankCard card;
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: Text(Utils.formatBankCardNumber(card.number), style: TextStyle(fontSize: 25)),
+    );
+  }
+}
+
+class CardAliasWidget extends StatelessWidget {
+  const CardAliasWidget({super.key, required this.card});
+  final BankCard card;
+  @override
+  Widget build(BuildContext context) {
+    var textStyle = TextStyle(fontWeight: FontWeight.bold, color: Colors.brown);
+    return StoreConnector<AppState, AppState>(
+        converter: (store) => store.state,
+        builder: (context, state) {
+          return Row(children: [
+            if (state.newCards.contains(card)) Text('New:', style: textStyle),
+            SizedBox(width: 10),
+            Text(card.alias, style: textStyle),
+          ]);
+        });
+  }
+}
+
+class CardCCVWidget extends StatelessWidget {
+  const CardCCVWidget({super.key, required this.card});
+  final BankCard card;
+  @override
+  Widget build(BuildContext context) {
+    return Text(card.ccv);
+  }
+}
+
+class CardCountryWidget extends StatelessWidget {
+  const CardCountryWidget({super.key, required this.card});
+  final BankCard card;
+  @override
+  Widget build(BuildContext context) {
+    return Text(card.country);
   }
 }

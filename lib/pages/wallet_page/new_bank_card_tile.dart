@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
-import 'package:wallet/data/models/bank_card.dart';
-import 'package:wallet/data/redux/actions.dart';
-import 'package:wallet/data/redux/state.dart';
+import 'package:wallet/app/styles.dart';
+import 'package:wallet/pages/new_card_page/new_card_page.dart';
 
 class NewBankCardTile extends StatelessWidget {
   const NewBankCardTile({super.key});
@@ -10,10 +8,10 @@ class NewBankCardTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 50,
-      margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+      height: Styles.cardHeight,
+      margin: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
       child: InkWell(
-        onTap: () => StoreProvider.of<AppState>(context).dispatch(AddCard(BankCard.sample())),
+        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const NewCardPage())),
         child: Container(
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(15)),

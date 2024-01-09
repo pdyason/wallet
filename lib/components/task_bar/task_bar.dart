@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:wallet/configs/styles.dart';
-import 'package:wallet/data/models/bank_card.dart';
+import 'package:wallet/app/styles.dart';
 import 'package:wallet/data/redux/actions.dart';
 import 'package:wallet/data/redux/state.dart';
-import 'package:wallet/configs/constants.dart';
+import 'package:wallet/app/constants.dart';
+import 'package:wallet/pages/new_card_page/new_card_page.dart';
 import 'package:wallet/pages/pages.dart';
 import 'package:wallet/components/task_bar/styled_icon.dart';
 
@@ -28,7 +28,40 @@ class _TaskBarState extends State<TaskBar> {
     );
   }
 
-  Container _buildTaskMenu() {
+  List<Widget> _menuOptions() => [
+        if (Constants.featureLoadSampleData)
+          MenuButton(
+            text: 'Load Sample Data',
+            iconData: Icons.arrow_right,
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text('Loading Sample Data'),
+                duration: Duration(milliseconds: 1000),
+              ));
+              StoreProvider.of<AppState>(context).dispatch(LoadSampleData());
+            },
+          ),
+        if (Constants.featureBannedCountries)
+          MenuButton(
+            text: 'Banned Countries',
+            iconData: Icons.arrow_right,
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const BannedPage()),
+            ),
+          ),
+        if (Constants.featureReademe)
+          MenuButton(
+            text: 'Readme',
+            iconData: Icons.arrow_right,
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ReadmePage()),
+            ),
+          ),
+      ];
+
+  Widget _buildTaskMenu() {
     return Container(
       decoration: BoxDecoration(
         boxShadow: [
@@ -61,62 +94,24 @@ class _TaskBarState extends State<TaskBar> {
                 const Spacer(),
                 IconButton(
                   icon: const StyledIcon(Icons.add_card_outlined),
-                  onPressed: _onAddCardPressed,
-                  // onPressed: context.dispatch<CompanyController>
+                  onPressed: () =>
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const NewCardPage())),
                 ),
-                IconButton(
-                  icon: const StyledIcon(Icons.more_vert),
-                  onPressed: () => _onMenuPressed(),
-                ),
+                if (Constants.menuFeatures.contains(true))
+                  IconButton(
+                    icon: const StyledIcon(Icons.more_vert),
+                    onPressed: () => setState(() => isOpen = !isOpen),
+                  ),
                 const SizedBox(width: 10),
               ],
             ),
             Column(
-              children: [
-                const SizedBox(height: 10),
-                MenuButton(
-                  text: 'Update Banned Countries',
-                  iconData: Icons.arrow_right,
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const BannedPage()),
-                  ),
-                ),
-                MenuButton(
-                  text: 'Load Sample Data',
-                  iconData: Icons.arrow_right,
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text('Loading Sample Data'),
-                      duration: Duration(milliseconds: 1000),
-                    ));
-                    StoreProvider.of<AppState>(context).dispatch(LoadSampleData());
-                  },
-                ),
-                MenuButton(
-                  text: 'Readme',
-                  iconData: Icons.arrow_right,
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const ReadmePage()),
-                  ),
-                ),
-              ],
+              children: [const SizedBox(height: 10), ..._menuOptions()],
             ),
           ],
         ),
       ),
     );
-  }
-
-  void _onAddCardPressed() async {
-    StoreProvider.of<AppState>(context).dispatch(AddCard(BankCard.sample()));
-  }
-
-  void _onMenuPressed() {
-    return setState(() {
-      isOpen = !isOpen;
-    });
   }
 }
 

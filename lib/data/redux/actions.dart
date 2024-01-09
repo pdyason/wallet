@@ -2,26 +2,42 @@ import 'package:wallet/data/models/bank_card.dart';
 
 sealed class AppAction {}
 
-class RemoveAllCards extends AppAction {
-  @override
-  String toString() => 'RemoveAllCards';
-}
-
 class LoadSampleData extends AppAction {
   @override
   String toString() => 'LoadSampleData';
 }
 
-class LoadSharedPrefs extends AppAction {
+class LoadSavedData extends AppAction {
   @override
-  String toString() => 'LoadSharedPrefs';
+  String toString() => 'LoadSavedData';
 }
 
-class UpdateCardlist extends AppAction {
+class UpdateCardList extends AppAction {
   final List<BankCard> cards;
-  UpdateCardlist(this.cards);
+  UpdateCardList(this.cards);
   @override
   String toString() => 'UpdateCardList';
+}
+
+class UpdateNewCardList extends AppAction {
+  final List<BankCard> newCards;
+  UpdateNewCardList(this.newCards);
+  @override
+  String toString() => 'UpdateNewCardList';
+}
+
+class CardListUpdated extends AppAction {
+  final List<BankCard> cards;
+  CardListUpdated(this.cards);
+  @override
+  String toString() => 'CardListUpdated';
+}
+
+class NewCardListUpdated extends AppAction {
+  final List<BankCard> newCards;
+  NewCardListUpdated(this.newCards);
+  @override
+  String toString() => 'NewCardListUpdated';
 }
 
 class UpdateAllCountryList extends AppAction {
@@ -36,6 +52,13 @@ class UpdateBannedList extends AppAction {
   UpdateBannedList(this.bannedCountries);
   @override
   String toString() => 'UpdateBannedList';
+}
+
+class BannedListUpdated extends AppAction {
+  final List<String> bannedCountries;
+  BannedListUpdated(this.bannedCountries);
+  @override
+  String toString() => 'BannedListUpdated';
 }
 
 class AddCard extends AppAction {

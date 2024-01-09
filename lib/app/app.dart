@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:wallet/configs/constants.dart';
+import 'package:wallet/app/constants.dart';
 import 'package:wallet/data/redux/state.dart';
 import 'package:wallet/pages/wallet_page/wallet_page.dart';
 import 'package:redux/redux.dart';

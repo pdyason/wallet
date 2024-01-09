@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:wallet/configs/constants.dart';
-import 'package:wallet/configs/styles.dart';
+import 'package:wallet/app/constants.dart';
+import 'package:wallet/app/styles.dart';
 import 'package:wallet/data/redux/actions.dart';
 import 'package:wallet/data/redux/state.dart';
 import 'package:wallet/pages/banned_page/country_picker.dart';
@@ -31,7 +31,7 @@ class BannedPage extends StatelessWidget {
 
   void _showCountryPicker(BuildContext context) {
     var state = StoreProvider.of<AppState>(context).state;
-    var countries = Constants.allCountries.toSet().difference(state.bannedCountries.toSet()).toList();
+    var availableCountries = Constants.allCountries.toSet().difference(state.bannedCountries.toSet()).toList();
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -39,7 +39,7 @@ class BannedPage extends StatelessWidget {
           backgroundColor: Styles.listBackgroundColor,
           title: const Text('Select a Country'),
           content: CountryPicker(
-            countries: countries,
+            countries: availableCountries,
             onCountrySelected: (country) {
               StoreProvider.of<AppState>(context).dispatch(AddBannedCountry(country));
               Navigator.pop(context);

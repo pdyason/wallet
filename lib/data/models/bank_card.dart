@@ -3,15 +3,17 @@ class BankCard {
   final String number;
   final String ccv;
   final String country;
+  final String alias;
 
-  BankCard({required this.type, required this.number, required this.ccv, required this.country});
+  BankCard({required this.type, required this.number, required this.ccv, required this.country, required this.alias});
 
   factory BankCard.sample() {
     return BankCard(
       type: 'VISA',
-      number: '0000 1111 2222 3333',
-      ccv: '123',
-      country: 'ZA',
+      number: '4444 3333 2222 1111',
+      ccv: '000',
+      country: 'South Africa',
+      alias: 'Sample Card',
     );
   }
 
@@ -19,7 +21,8 @@ class BankCard {
       : type = json['type'],
         number = json['number'],
         ccv = json['ccv'],
-        country = json['country'];
+        country = json['country'],
+        alias = json['alias'] ?? '';
 
   Map<String, dynamic> toJson() {
     return {
@@ -27,18 +30,22 @@ class BankCard {
       'number': number,
       'ccv': ccv,
       'country': country,
+      'alias': alias,
     };
   }
 
   @override
-  String toString() {
-    return '$type: $number';
-  }
+  String toString() => '$type: $number';
 
   @override
-  int get hashCode => Object.hash(type, number, ccv, country);
+  int get hashCode => Object.hash(type, number, ccv, country, alias);
 
   @override
   operator ==(other) =>
-      other is BankCard && other.type == type && other.number == number && other.ccv == ccv && other.country == country;
+      other is BankCard &&
+      other.type == type &&
+      other.number == number &&
+      other.ccv == ccv &&
+      other.country == country &&
+      other.alias == alias;
 }

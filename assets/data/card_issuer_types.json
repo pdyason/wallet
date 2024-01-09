@@ -7,8 +7,8 @@
             "lengths": [13,16]
         },
         {
-            "type": "Diners Club Carte Blanche",
-            "leadingNumbers": [],
+            "type": "Diners Club",
+            "leadingNumbers": [36,38],
             "leadingNumberRanges": [{"start": 300, "end":305}],
             "lengths": [14]
         },
@@ -29,12 +29,6 @@
             "leadingNumbers": [34,37],
             "leadingNumberRanges": [],
             "lengths": [15]
-        },
-        {
-            "type": "Diners Club International",
-            "leadingNumbers": [36,38],
-            "leadingNumberRanges": [],
-            "lengths": [14]
         },
         {
             "type": "Discover Card",

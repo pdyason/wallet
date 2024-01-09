@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wallet/configs/styles.dart';
+import 'package:wallet/app/styles.dart';
 
 class StyledIcon extends StatelessWidget {
   const StyledIcon(this.icon, {super.key});

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:wallet/configs/styles.dart';
+import 'package:wallet/app/styles.dart';
 import 'package:wallet/data/repositories/asset_data.dart';
 
 class ReadmePage extends StatelessWidget {
@@ -14,7 +14,7 @@ class ReadmePage extends StatelessWidget {
         backgroundColor: Styles.listBackgroundColor,
       ),
       body: const Padding(
-        padding: EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 20),
+        padding: EdgeInsets.all(20),
         child: Center(child: ReadmeView()),
       ),
     );
