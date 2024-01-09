@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:wallet/app/styles.dart';
@@ -79,7 +77,7 @@ class CardTypeWidget extends StatelessWidget {
       children: [
         const Icon(Icons.credit_card, size: 30),
         const SizedBox(width: 10),
-        Text(card.type, style: TextStyle(fontSize: 18)),
+        Text(card.type, style: const TextStyle(fontSize: 18)),
       ],
     );
   }
@@ -92,7 +90,7 @@ class CardNumberWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 10),
-      child: Text(Utils.formatBankCardNumber(card.number), style: TextStyle(fontSize: 25)),
+      child: Text(Utils.formatCardNumber(card.number), style: const TextStyle(fontSize: 25)),
     );
   }
 }
@@ -102,13 +100,13 @@ class CardAliasWidget extends StatelessWidget {
   final BankCard card;
   @override
   Widget build(BuildContext context) {
-    var textStyle = TextStyle(fontWeight: FontWeight.bold, color: Colors.brown);
+    var textStyle = const TextStyle(fontWeight: FontWeight.bold, color: Colors.brown);
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
         builder: (context, state) {
           return Row(children: [
             if (state.newCards.contains(card)) Text('New:', style: textStyle),
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
             Text(card.alias, style: textStyle),
           ]);
         });
@@ -120,7 +118,7 @@ class CardCCVWidget extends StatelessWidget {
   final BankCard card;
   @override
   Widget build(BuildContext context) {
-    return Text(card.ccv);
+    return Text('CCV  ${card.ccv}');
   }
 }
 

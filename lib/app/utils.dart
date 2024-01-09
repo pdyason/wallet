@@ -18,12 +18,15 @@ void debug(dynamic value) {
 class Utils {
   static Future<Map<String, String>?> scanCard() async {
     var cardDetails = await CardScanner.scanCard(
-      scanOptions: const CardScanOptions(scanCardHolderName: true),
+      scanOptions: const CardScanOptions(
+        scanCardHolderName: true,
+        enableLuhnCheck: true,
+      ),
     );
     return cardDetails?.map; // {cardNumber:, cardHolderName: }
   }
 
-  static String formatBankCardNumber(String creditCardNumber) {
+  static String formatCardNumber(String creditCardNumber) {
     // Remove any existing spaces or non-digit characters
     creditCardNumber = creditCardNumber.replaceAll(RegExp(r'\D'), '');
     // Add sapces after every 4 digits
@@ -33,6 +36,19 @@ class Utils {
     }
     String formattedNumber = chunks.join(' ');
     return formattedNumber;
+  }
+
+  // luhn check
+  static bool isCardNumberValid(String cardNumber) {
+    List<int> cardDigits = cardNumber.split('').map(int.parse).toList();
+    // Double every second digit from right to left
+    for (int i = cardDigits.length - 2; i >= 0; i -= 2) {
+      cardDigits[i] = (cardDigits[i] * 2 > 9) ? cardDigits[i] * 2 - 9 : cardDigits[i] * 2;
+    }
+    // Sum all the digits
+    int total = cardDigits.reduce((a, b) => a + b);
+    // Check if the total is divisible by 10
+    return total % 10 == 0;
   }
 
   static void printList(List list) {
