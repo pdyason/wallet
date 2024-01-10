@@ -21,7 +21,7 @@ void main() async {
   // initialize Widgets Binding
   WidgetsFlutterBinding.ensureInitialized();
 
-  // load saved data
+  // load saved data //TODO
   store.dispatch(LoadSavedData());
 
   // set portrait mode

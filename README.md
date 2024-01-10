@@ -29,6 +29,8 @@ iOS requires additional permissions
 
 Run Tests: `flutter test -r github`
 
+Automated tests in Github Workflows
+
 - Unit Test
 - Widget Test
 - Integration Test

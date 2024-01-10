@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:wallet/app/app.dart';
 import 'package:wallet/app/styles.dart';
+import 'package:wallet/data/models/bank_card.dart';
 import 'package:wallet/data/redux/actions.dart';
 import 'package:wallet/data/redux/state.dart';
 import 'package:wallet/pages/wallet_page/bank_card_tile.dart';
 import 'package:wallet/pages/wallet_page/new_bank_card_tile.dart';
 
 class CardList extends StatefulWidget {
-  const CardList({
-    super.key,
-  });
+  const CardList({super.key});
 
   @override
   State<CardList> createState() => _CardListState();
@@ -59,28 +58,16 @@ class _CardListState extends State<CardList> {
             children: [
               if (state.cards.isEmpty) const NewBankCardTile(),
               ...state.cards
-                  .map((card) => Dismissible(
-                      key: Key(card.toString()),
-                      onDismissed: (direction) {
-                        StoreProvider.of<AppState>(context).dispatch(RemoveCard(card));
-                        // Then show a snackbar.
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text('Removed ${card.number}'),
-                          action: SnackBarAction(
-                            label: 'Undo',
-                            textColor: Styles.cardBackgroundColor,
-                            onPressed: () {
-                              StoreProvider.of<AppState>(App.navKey.currentContext!)
-                                  .dispatch(SetAppState(state.copyWith()));
-                            },
-                          ),
-                          duration: const Duration(milliseconds: 2000),
-                        ));
-                      },
+                  .map(
+                    (card) => DismissibleTile(
+                      card: card,
+                      state: state,
                       child: BankCardTile(
                         card: card,
                         isNewlyAdded: state.newCards.contains(card),
-                      )))
+                      ),
+                    ),
+                  )
                   .toList()
                   .reversed,
             ],
@@ -88,5 +75,34 @@ class _CardListState extends State<CardList> {
         );
       },
     );
+  }
+}
+
+class DismissibleTile extends StatelessWidget {
+  const DismissibleTile({super.key, required this.card, required this.child, required this.state});
+  final BankCard card;
+  final Widget child;
+  final AppState state;
+
+  @override
+  Widget build(BuildContext context) {
+    return Dismissible(
+        key: Key(card.toString()),
+        onDismissed: (direction) {
+          StoreProvider.of<AppState>(context).dispatch(RemoveCard(card));
+          // Then show a snackbar. //TODO
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('Removed ${card.number}'),
+            action: SnackBarAction(
+              label: 'Undo',
+              textColor: Styles.cardBackgroundColor,
+              onPressed: () {
+                StoreProvider.of<AppState>(App.navKey.currentContext!).dispatch(SetAppState(state.copyWith()));
+              },
+            ),
+            duration: const Duration(milliseconds: 2000),
+          ));
+        },
+        child: child);
   }
 }

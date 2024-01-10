@@ -3,15 +3,12 @@ import 'package:flutter/foundation.dart';
 import 'package:wallet/app/globals.dart' as globals;
 
 // print debug messages
-void debug(dynamic value) {
+void debug(dynamic value, {bool isError = false}) {
   if (kDebugMode && globals.allowDebugPrints) {
-    try {
-      // ignore: avoid_print
-      print('\x1B[33m$value\x1B[0m'); // print yello
-    } catch (e) {
-      // ignore: avoid_print
-      print('\x1B[31m$e\x1B[0m'); // print red
-    }
+    // ignore: avoid_print
+    if (!isError) print('\x1B[33m$value\x1B[0m'); // print yello
+    // ignore: avoid_print
+    if (isError) print('\x1B[31m$value\x1B[0m'); // print red
   }
 }
 
@@ -54,7 +51,7 @@ class Utils {
   }
 
   static void printList(List list) {
-    for (var obj in (list)) {
+    for (var obj in list) {
       debug(obj);
     }
   }

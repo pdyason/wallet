@@ -19,6 +19,14 @@ class SetAppState extends AppAction {
   String toString() => 'SetAppState';
 }
 
+class CatchException extends AppAction {
+  final Object e;
+
+  CatchException(this.e);
+  @override
+  String toString() => 'CatchException';
+}
+
 class LoadSampleCard extends AppAction {
   @override
   String toString() => 'LoadSampleCard';

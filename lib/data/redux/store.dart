@@ -8,7 +8,11 @@ import 'package:wallet/data/redux/state.dart';
 
 class AppStore {
   static Store<AppState> init() {
-    final middleware = <Middleware<AppState>>[loggingMiddleware, appStateMiddleware];
+    final middleware = <Middleware<AppState>>[
+      loggingMiddleware,
+      appStateMiddleware,
+      catchExceptionMiddleware,
+    ];
     final store = Store<AppState>(
       reducer,
       initialState: AppState.initial(),

@@ -35,8 +35,7 @@ class BankCardType {
   List<String> getPrefixes() {
     var pn = prefixNumbers.toList();
     List<String> pr = [];
-    for (var i = 0; i < prefixNumberRanges.length; i++) {
-      Map<String, String> range = prefixNumberRanges[i];
+    for (var range in prefixNumberRanges) {
       assert(range['start']!.length == range['end']!.length, true);
       assert(range['start']![0] == range['start']![0], true);
       assert(range['start']![0] != '0', true);

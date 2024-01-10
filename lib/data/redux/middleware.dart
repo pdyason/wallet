@@ -11,6 +11,16 @@ void loggingMiddleware(Store<AppState> store, dynamic action, NextDispatcher nex
   next(action);
 }
 
+// print exception
+void catchExceptionMiddleware(Store<AppState> store, dynamic action, NextDispatcher next) {
+  debug('++ Exception: $action');
+  if (action is CatchException) {
+    debug(action.e.toString(), isError: true);
+  } else {
+    next(action);
+  }
+}
+
 // this middleware handles input actions and does not pass handled actions to next
 void appStateMiddleware(Store<AppState> store, dynamic action, NextDispatcher next) async {
   switch (action.runtimeType) {
@@ -46,23 +56,35 @@ _loadSampleCard(Store<AppState> store) {
 }
 
 _loadSavedData(Store<AppState> store) async {
-  store.dispatch(UpdateCardList(await SharedPrefs.fetchCardList()));
-  store.dispatch(UpdateBannedList(await SharedPrefs.fetchBannedList()));
+  try {
+    store.dispatch(UpdateCardList(await SharedPrefs.fetchCardList()));
+    store.dispatch(UpdateBannedList(await SharedPrefs.fetchBannedList()));
+  } catch (e) {
+    store.dispatch(CatchException(e));
+  }
 }
 
 _updateCardList(Store<AppState> store, UpdateCardList action) async {
-  await SharedPrefs.saveCardList(action.cards);
-  store.dispatch(CardListUpdated(action.cards));
+  try {
+    await SharedPrefs.saveCardList(action.cards);
+    store.dispatch(CardListUpdated(action.cards));
+  } catch (e) {
+    store.dispatch(CatchException(e));
+  }
 }
 
 _updateBannedList(Store<AppState> store, UpdateBannedList action) async {
-  await SharedPrefs.saveBannedList(action.bannedCountries);
-  store.dispatch(BannedListUpdated(action.bannedCountries));
+  try {
+    await SharedPrefs.saveBannedList(action.bannedCountries);
+    store.dispatch(BannedListUpdated(action.bannedCountries));
+  } catch (e) {
+    store.dispatch(CatchException(e));
+  }
 }
 
 _addCard(Store<AppState> store, AddCard action) {
   // check if card already exists
-  if (store.state.cards.map((c) => c.number).toList().contains(action.card.number)) return;
+  //TODO// if (store.state.cards.map((c) => c.number).toList().contains(action.card.number)) return;
   // add to new cards list
   store.dispatch(NewCardListUpdated(List.from(store.state.newCards)..add(action.card)));
   store.dispatch(UpdateCardList(List.from(store.state.cards)..add(action.card)));
