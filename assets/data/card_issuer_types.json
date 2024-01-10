@@ -2,38 +2,38 @@
     "types": [
         {
             "type": "Visa",
-            "prefixNumbers": [4],
-            "prefixNumberRanges": [{"start": 1, "end":2}],
+            "prefixNumbers": ["4"],
+            "prefixNumberRanges": [{"start": "1", "end":"2"}],
             "lengths": [13,16]
         },
         {
             "type": "Diners Club",
-            "leadingNumbers": [36,38],
-            "leadingNumberRanges": [{"start": 300, "end":305}],
+            "prefixNumbers": ["36","38"],
+            "prefixNumberRanges": [{"start": "300", "end":"305"}],
             "lengths": [14]
         },
         {
             "type": "MasterCard",
-            "leadingNumbers": [51,55],
-            "leadingNumberRanges": [],
+            "prefixNumbers": ["51","55"],
+            "prefixNumberRanges": [],
             "lengths": [16]
         },
         {
             "type": "Maestro",
-            "leadingNumbers": [5018,5020,5038,6304,6759,6761,6762,6763],
-            "leadingNumberRanges": [],
+            "prefixNumbers": ["5018","5020","5038","6304","6759","6761","6762","6763"],
+            "prefixNumberRanges": [],
             "lengths": [12,13,14,15,16,17,18,19]
         },
         {
             "type": "American Express",
-            "leadingNumbers": [34,37],
-            "leadingNumberRanges": [],
+            "prefixNumbers": ["34","37"],
+            "prefixNumberRanges": [],
             "lengths": [15]
         },
         {
             "type": "Discover Card",
-            "leadingNumbers": [6011,65],
-            "leadingNumberRanges": [{"start": 622126, "end":622925},{"start": 644, "end":649}],
+            "prefixNumbers": ["6011","65"],
+            "prefixNumberRanges": [{"start": "622126", "end":"622925"},{"start": "644", "end":"649"}],
             "lengths": [16]
         }
     ]

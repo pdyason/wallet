@@ -1,67 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 import 'package:wallet/app/styles.dart';
 import 'package:wallet/app/utils.dart';
 import 'package:wallet/data/models/bank_card.dart';
-import 'package:wallet/data/redux/actions.dart';
-import 'package:wallet/data/redux/state.dart';
 
 class BankCardTile extends StatelessWidget {
-  const BankCardTile(this.card, {super.key});
+  const BankCardTile({super.key, required this.card, required this.isNewlyAdded});
   final BankCard card;
+  final bool isNewlyAdded;
 
   @override
   Widget build(BuildContext context) {
-    return Dismissible(
-      key: Key(card.toString()),
-      onDismissed: (direction) {
-        StoreProvider.of<AppState>(context).dispatch(RemoveCard(card));
-        // Then show a snackbar.
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Removed $card'),
-          duration: const Duration(milliseconds: 1000),
-        ));
-      },
-      child: Container(
-        height: Styles.cardHeight,
-        margin: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
-        padding: const EdgeInsets.all(15),
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(15)),
-          border: Border.all(color: Styles.cardBorderColor),
-          color: Styles.cardBackgroundColor,
-        ),
-        child: BankCardTileView(card: card),
+    return Container(
+      height: Styles.cardHeight,
+      margin: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.all(Radius.circular(15)),
+        border: Border.all(color: Styles.cardBorderColor),
+        color: Styles.cardBackgroundColor,
       ),
-    );
-  }
-}
-
-class BankCardTileView extends StatelessWidget {
-  const BankCardTileView({super.key, required this.card});
-
-  final BankCard card;
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        // Top-left corner widget
-        Positioned(top: 0, left: 0, child: CardTypeWidget(card: card)),
-        // Top-right corner widget
-        Positioned(top: 0, right: 0, child: CardAliasWidget(card: card)),
-        // Bottom-left corner widget
-        Positioned(bottom: 0, left: 0, child: CardCountryWidget(card: card)),
-        // Bottom-right corner widget
-        Positioned(bottom: 0, right: 0, child: CardCCVWidget(card: card)),
-        // Center widget
-        Center(
-          child: SizedBox(
-            width: double.maxFinite,
-            child: CardNumberWidget(card: card),
+      child: Stack(
+        children: [
+          // Top-left corner widget
+          Positioned(top: 0, left: 0, child: CardTypeWidget(card: card)),
+          // Top-right corner widget
+          Positioned(top: 0, right: 0, child: CardAliasWidget(card: card, isNewlyAdded: isNewlyAdded)),
+          // Bottom-left corner widget
+          Positioned(bottom: 0, left: 0, child: CardCountryWidget(card: card)),
+          // Bottom-right corner widget
+          Positioned(bottom: 0, right: 0, child: CardCCVWidget(card: card)),
+          // Center widget
+          Center(
+            child: SizedBox(
+              width: double.maxFinite,
+              child: CardNumberWidget(card: card),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -96,20 +72,17 @@ class CardNumberWidget extends StatelessWidget {
 }
 
 class CardAliasWidget extends StatelessWidget {
-  const CardAliasWidget({super.key, required this.card});
+  const CardAliasWidget({super.key, required this.card, required this.isNewlyAdded});
   final BankCard card;
+  final bool isNewlyAdded;
   @override
   Widget build(BuildContext context) {
     var textStyle = const TextStyle(fontWeight: FontWeight.bold, color: Colors.brown);
-    return StoreConnector<AppState, AppState>(
-        converter: (store) => store.state,
-        builder: (context, state) {
-          return Row(children: [
-            if (state.newCards.contains(card)) Text('New:', style: textStyle),
-            const SizedBox(width: 10),
-            Text(card.alias, style: textStyle),
-          ]);
-        });
+    return Row(children: [
+      if (isNewlyAdded) Text('*', style: textStyle),
+      const SizedBox(width: 10),
+      Text(card.alias, style: textStyle),
+    ]);
   }
 }
 

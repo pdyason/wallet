@@ -7,7 +7,7 @@ class Constants {
   static const bool featureLoadSampleData = true;
   static const bool featureReademe = true;
 
-  // menu features to list
+  // menu features list
   static const List<bool> menuFeatures = [
     Constants.featureBannedCountries,
     Constants.featureLoadSampleData,

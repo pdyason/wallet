@@ -12,9 +12,11 @@ void loggingMiddleware(Store<AppState> store, dynamic action, NextDispatcher nex
 }
 
 // this middleware handles input actions and does not pass handled actions to next
-void appStateMiddleware(Store<AppState> store, dynamic action, NextDispatcher next) {
+void appStateMiddleware(Store<AppState> store, dynamic action, NextDispatcher next) async {
   switch (action.runtimeType) {
     // Cards
+    case SetAppState:
+      _setAppState(store, action);
     case AddCard:
       _addCard(store, action);
     case RemoveCard:
@@ -29,8 +31,8 @@ void appStateMiddleware(Store<AppState> store, dynamic action, NextDispatcher ne
     case UpdateBannedList:
       _updateBannedList(store, action); // unawaited
     // Samples
-    case LoadSampleData:
-      _loadSampleData(store);
+    case LoadSampleCard:
+      _loadSampleCard(store);
     // Saved
     case LoadSavedData:
       _loadSavedData(store); // unawaited
@@ -39,9 +41,8 @@ void appStateMiddleware(Store<AppState> store, dynamic action, NextDispatcher ne
   }
 }
 
-_loadSampleData(Store<AppState> store) {
+_loadSampleCard(Store<AppState> store) {
   store.dispatch(AddCard(BankCard.sample()));
-  store.dispatch(AddBannedCountry("United States"));
 }
 
 _loadSavedData(Store<AppState> store) async {
@@ -81,4 +82,10 @@ _addBannedCountry(Store<AppState> store, AddBannedCountry action) {
 
 _removeBannedCountry(Store<AppState> store, RemoveBannedCountry action) {
   store.dispatch(UpdateBannedList(List.from(store.state.bannedCountries)..removeWhere((c) => c == action.country)));
+}
+
+_setAppState(Store<AppState> store, SetAppState action) {
+  store.dispatch(UpdateBannedList(List.from(action.newState.bannedCountries)));
+  store.dispatch(UpdateCardList(List.from(action.newState.cards)));
+  store.dispatch(NewCardListUpdated(List.from(action.newState.newCards)));
 }

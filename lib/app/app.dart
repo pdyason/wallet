@@ -6,6 +6,7 @@ import 'package:wallet/pages/wallet_page/wallet_page.dart';
 import 'package:redux/redux.dart';
 
 class App extends StatelessWidget {
+  static GlobalKey<NavigatorState> navKey = GlobalKey();
   final Store<AppState> store;
   const App(this.store, {super.key});
 
@@ -14,6 +15,7 @@ class App extends StatelessWidget {
     return StoreProvider(
       store: store,
       child: MaterialApp(
+        navigatorKey: navKey,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSwatch(
             primarySwatch: Colors.brown,

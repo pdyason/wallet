@@ -23,7 +23,10 @@ class NewCardPage extends StatelessWidget {
             ),
             body: Padding(
               padding: const EdgeInsets.all(20),
-              child: NewCardForm(state: state),
+              child: NewCardForm(
+                existingCardNumbers: state.cards.map((c) => c.number).toList(),
+                availableCountries: Constants.allCountries.toSet().difference(state.bannedCountries.toSet()).toList(),
+              ),
             ),
           );
         });
@@ -31,27 +34,23 @@ class NewCardPage extends StatelessWidget {
 }
 
 class NewCardForm extends StatefulWidget {
-  final AppState state;
-  const NewCardForm({required this.state, super.key});
+  final List<String> existingCardNumbers;
+  final List<String> availableCountries;
+  const NewCardForm({
+    required this.existingCardNumbers,
+    required this.availableCountries,
+    super.key,
+  });
   @override
   State<NewCardForm> createState() => _NewCardFormState();
 }
 
 class _NewCardFormState extends State<NewCardForm> {
-  late final List<String> availableCountries;
-  late final List<String> existingCards;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _aliasController = TextEditingController();
   final TextEditingController _numberController = TextEditingController();
   final TextEditingController _ccvController = TextEditingController();
   String? _selectedCountry;
-
-  @override
-  void initState() {
-    super.initState();
-    availableCountries = Constants.allCountries.toSet().difference(widget.state.bannedCountries.toSet()).toList();
-    existingCards = widget.state.cards.map((c) => c.number).toList();
-  }
 
   // TODO add to validations
 
@@ -65,8 +64,10 @@ class _NewCardFormState extends State<NewCardForm> {
   String? _validateNumber(String? value) {
     if (value == null || !RegExp(r'^[0-9]+$').hasMatch(value)) {
       return 'Enter a valid bank card number';
-    } else if (existingCards.contains(value)) {
+    } else if (widget.existingCardNumbers.contains(value)) {
       return 'This card has already add been added';
+    } else if (!Utils.isCardNumberValid(value)) {
+      return 'Invalid card number (Luhn)';
     }
     return null;
   }
@@ -79,8 +80,10 @@ class _NewCardFormState extends State<NewCardForm> {
   }
 
   String? _validateCountry(value) {
-    if (value == null || value.isEmpty || !availableCountries.contains(value)) {
+    if (value == null || value.isEmpty) {
       return 'Select a country';
+    } else if (!widget.availableCountries.contains(value)) {
+      return 'Cards from this country are not allowed';
     }
     return null;
   }
@@ -143,7 +146,7 @@ class _NewCardFormState extends State<NewCardForm> {
           _selectedCountry = value;
         });
       },
-      items: availableCountries.map<DropdownMenuItem<String>>((String value) {
+      items: widget.availableCountries.map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
           child: Text(value),
@@ -186,7 +189,7 @@ class _NewCardFormState extends State<NewCardForm> {
       decoration: const InputDecoration(
         labelText: 'Enter Alias (Optional)',
       ),
-      keyboardType: TextInputType.number,
+      keyboardType: TextInputType.name,
       validator: _validateAlias,
     );
   }

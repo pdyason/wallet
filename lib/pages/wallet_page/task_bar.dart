@@ -6,7 +6,6 @@ import 'package:wallet/data/redux/state.dart';
 import 'package:wallet/app/constants.dart';
 import 'package:wallet/pages/new_card_page/new_card_page.dart';
 import 'package:wallet/pages/pages.dart';
-import 'package:wallet/components/task_bar/styled_icon.dart';
 
 class TaskBar extends StatefulWidget {
   const TaskBar({super.key});
@@ -31,14 +30,14 @@ class _TaskBarState extends State<TaskBar> {
   List<Widget> _menuOptions() => [
         if (Constants.featureLoadSampleData)
           MenuButton(
-            text: 'Load Sample Data',
+            text: 'Load Sample Card',
             iconData: Icons.arrow_right,
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                 content: Text('Loading Sample Data'),
                 duration: Duration(milliseconds: 1000),
               ));
-              StoreProvider.of<AppState>(context).dispatch(LoadSampleData());
+              StoreProvider.of<AppState>(context).dispatch(LoadSampleCard());
             },
           ),
         if (Constants.featureBannedCountries)
@@ -93,13 +92,13 @@ class _TaskBarState extends State<TaskBar> {
                 const Text(Constants.appName, style: Styles.textStyle),
                 const Spacer(),
                 IconButton(
-                  icon: const StyledIcon(Icons.add_card_outlined),
+                  icon: const TaskBarIcon(Icons.add_card),
                   onPressed: () =>
                       Navigator.push(context, MaterialPageRoute(builder: (context) => const NewCardPage())),
                 ),
                 if (Constants.menuFeatures.contains(true))
                   IconButton(
-                    icon: const StyledIcon(Icons.more_vert),
+                    icon: const TaskBarIcon(Icons.more_vert),
                     onPressed: () => setState(() => isOpen = !isOpen),
                   ),
                 const SizedBox(width: 10),
@@ -129,12 +128,27 @@ class MenuButton extends StatelessWidget {
         onPressed: onPressed,
         child: Row(
           children: [
-            StyledIcon(iconData),
+            TaskBarIcon(iconData),
             const SizedBox(width: 10),
             Text(text, style: Styles.textStyle.copyWith(fontSize: 20)),
           ],
         ),
       ),
+    );
+  }
+}
+
+class TaskBarIcon extends StatelessWidget {
+  const TaskBarIcon(this.icon, {super.key});
+  final IconData? icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Icon(
+      icon,
+      size: Styles.iconSize,
+      color: Styles.toolbarForegroundColor,
+      shadows: const [Shadow(color: Styles.toolbarShadowColor, blurRadius: 10)],
     );
   }
 }

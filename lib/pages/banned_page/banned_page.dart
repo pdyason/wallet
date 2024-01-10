@@ -58,19 +58,19 @@ class BannedView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        color: Styles.listBackgroundColor,
-      ),
-      child: StoreConnector<AppState, AppState>(
-        converter: (store) => store.state,
-        builder: (context, state) {
-          return ListView(
+    return StoreConnector<AppState, AppState>(
+      converter: (store) => store.state,
+      builder: (context, state) {
+        return Container(
+          decoration: const BoxDecoration(
+            color: Styles.listBackgroundColor,
+          ),
+          child: ListView(
             scrollDirection: Axis.vertical,
             children: [...state.bannedCountries.map((c) => CountryTile(c)).toList()],
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

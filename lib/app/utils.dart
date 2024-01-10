@@ -1,21 +1,22 @@
-// ignore_for_file: avoid_print
 import 'package:credit_card_scanner/credit_card_scanner.dart';
 import 'package:flutter/foundation.dart';
+import 'package:wallet/app/globals.dart' as globals;
 
+// print debug messages
 void debug(dynamic value) {
-  if (kDebugMode) {
-    // if (kDebugMode || true) {
+  if (kDebugMode && globals.allowDebugPrints) {
     try {
-      // print yello
-      print('\x1B[33m$value\x1B[0m');
+      // ignore: avoid_print
+      print('\x1B[33m$value\x1B[0m'); // print yello
     } catch (e) {
-      // print red
-      print('\x1B[31m$e\x1B[0m');
+      // ignore: avoid_print
+      print('\x1B[31m$e\x1B[0m'); // print red
     }
   }
 }
 
 class Utils {
+  // card scanner utility
   static Future<Map<String, String>?> scanCard() async {
     var cardDetails = await CardScanner.scanCard(
       scanOptions: const CardScanOptions(
@@ -26,6 +27,7 @@ class Utils {
     return cardDetails?.map; // {cardNumber:, cardHolderName: }
   }
 
+  // format card number with spaces
   static String formatCardNumber(String creditCardNumber) {
     // Remove any existing spaces or non-digit characters
     creditCardNumber = creditCardNumber.replaceAll(RegExp(r'\D'), '');
@@ -38,7 +40,7 @@ class Utils {
     return formattedNumber;
   }
 
-  // luhn check
+  // luhn card number check
   static bool isCardNumberValid(String cardNumber) {
     List<int> cardDigits = cardNumber.split('').map(int.parse).toList();
     // Double every second digit from right to left

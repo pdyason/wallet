@@ -1,10 +1,27 @@
 import 'package:wallet/data/models/bank_card.dart';
+import 'package:wallet/data/redux/state.dart';
 
 sealed class AppAction {}
 
-class LoadSampleData extends AppAction {
+// class Undo extends AppAction {
+//   final AppState prevState;
+
+//   Undo(this.prevState);
+//   @override
+//   String toString() => 'Undo';
+// }
+
+class SetAppState extends AppAction {
+  final AppState newState;
+
+  SetAppState(this.newState);
   @override
-  String toString() => 'LoadSampleData';
+  String toString() => 'SetAppState';
+}
+
+class LoadSampleCard extends AppAction {
+  @override
+  String toString() => 'LoadSampleCard';
 }
 
 class LoadSavedData extends AppAction {
