@@ -6,7 +6,6 @@ sealed class AppAction {}
 
 class SetAppState extends AppAction {
   final AppState newState;
-
   SetAppState(this.newState);
   @override
   String toString() => 'SetAppState';
@@ -14,7 +13,6 @@ class SetAppState extends AppAction {
 
 class CatchException extends AppAction {
   final Object e;
-
   CatchException(this.e);
   @override
   String toString() => 'CatchException';

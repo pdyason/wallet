@@ -2,11 +2,13 @@
 /// GitHub @pdyason
 /// Apache 2.0 License
 
+import 'dart:async';
 import 'dart:io' as io;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wallet/data/redux/actions.dart';
 import 'package:wallet/data/redux/store.dart';
+import 'package:wallet/data/repositories/asset_data.dart';
 import 'app/app.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
@@ -19,6 +21,9 @@ void main() async {
 
   // load saved data
   store.dispatch(LoadSavedData());
+
+  // load asset data into memory to improve responsiveness
+  unawaited(AssetData.loadAssetDataIntoMemory());
 
   // run flutter app
   if (kIsWeb) {

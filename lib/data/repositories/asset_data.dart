@@ -11,6 +11,11 @@ class AssetData {
     return jsonDecode((await rootBundle.loadString(assetsPath)));
   }
 
+  static Future<void> loadAssetDataIntoMemory() async {
+    getIssuerTypes();
+    getReadme();
+  }
+
   static Future<List<BankCardType>> getIssuerTypes() async {
     if (issuerTypes != null) return issuerTypes!;
     issuerTypes = ((await _parseJsonFromAssets('assets/data/card_issuer_types.json'))["types"] as List)
