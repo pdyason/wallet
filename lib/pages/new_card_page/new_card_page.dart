@@ -99,7 +99,9 @@ class _NewCardFormState extends State<NewCardForm> {
   }
 
   String? _validateType(String? value) {
-    if (value == null || value.length > 15) {
+    if (value == null || value.isEmpty) {
+      return 'Enter a card issuer (Visa)';
+    } else if (value.length > 15) {
       return 'Maximum 15 characters';
     }
     return null;
@@ -217,7 +219,7 @@ class _NewCardFormState extends State<NewCardForm> {
     return TextFormField(
       controller: _typeController,
       decoration: const InputDecoration(
-        labelText: 'Enter Card Type',
+        labelText: 'Enter Card Issuer',
       ),
       keyboardType: TextInputType.name,
       validator: _validateType,
