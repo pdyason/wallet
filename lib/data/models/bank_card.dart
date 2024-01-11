@@ -9,8 +9,8 @@ class BankCard {
 
   factory BankCard.sample() {
     return BankCard(
-      type: 'VISA',
-      number: '4242 4242 4242 4242',
+      type: 'Visa',
+      number: '4242424242424242',
       ccv: '123',
       country: 'South Africa',
       alias: 'Sample Card',

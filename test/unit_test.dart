@@ -20,7 +20,7 @@ void main() {
   test('IssuerTypes', () async {
     List<BankCardType> types = await AssetData.getIssuerTypes();
     expect(types.where((t) => t.type == 'Visa').toList().length == 1, true);
-    BankCardType dc = types.firstWhere((t) => t.type == 'Diners Club');
+    BankCardType dc = types.firstWhere((t) => t.type == 'DinersClub');
     expect(dc.getPrefixes().length > 1, true);
   });
 }

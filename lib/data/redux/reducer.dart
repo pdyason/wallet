@@ -19,10 +19,7 @@ AppState reducer(AppState state, dynamic action) {
 
   // reduce actions that alter the state
   if (action is CardListUpdated) {
-    return newState(state.copyWith(cards: action.cards));
-  }
-  if (action is NewCardListUpdated) {
-    return newState(state.copyWith(newCards: action.newCards));
+    return newState(state.copyWith(cards: action.cards, newCards: action.newCards));
   }
   if (action is BannedListUpdated) {
     List<String> newList = action.bannedCountries;

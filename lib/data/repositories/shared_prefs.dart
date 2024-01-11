@@ -2,6 +2,10 @@ import 'package:wallet/data/models/bank_card.dart';
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+/// Known issue with package flutter_secure_storage
+/// Warning: Accessing hidden method Lsun/misc/Unsafe
+/// https://github.com/mogol/flutter_secure_storage/issues/527
+
 class SharedPrefs {
   static const androidOptions = AndroidOptions(encryptedSharedPreferences: true);
   static const storage = FlutterSecureStorage(aOptions: androidOptions);

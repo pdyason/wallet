@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:wallet/app/app.dart';
 import 'package:wallet/app/styles.dart';
+import 'package:wallet/app/utils.dart';
 import 'package:wallet/data/models/bank_card.dart';
 import 'package:wallet/data/redux/actions.dart';
 import 'package:wallet/data/redux/state.dart';
@@ -89,19 +90,27 @@ class DismissibleTile extends StatelessWidget {
     return Dismissible(
         key: UniqueKey(),
         onDismissed: (direction) {
-          StoreProvider.of<AppState>(context).dispatch(RemoveCard(card));
-          // Then show a snackbar. //TODO
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Removed ${card.number}'),
-            action: SnackBarAction(
-              label: 'Undo',
-              textColor: Styles.cardBackgroundColor,
-              onPressed: () {
-                StoreProvider.of<AppState>(App.navKey.currentContext!).dispatch(SetAppState(state.copyWith()));
+          StoreProvider.of<AppState>(context).dispatch(
+            RemoveCard(
+              card,
+              onRemoved: () {
+                // Then show a snackbar
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Removed ${Utils.formatCardNumber(card.number)}'),
+                    action: SnackBarAction(
+                      label: 'Undo',
+                      textColor: Styles.cardBackgroundColor,
+                      onPressed: () {
+                        StoreProvider.of<AppState>(App.navKey.currentContext!).dispatch(SetAppState(state.copyWith()));
+                      },
+                    ),
+                    duration: const Duration(milliseconds: 2000),
+                  ),
+                );
               },
             ),
-            duration: const Duration(milliseconds: 2000),
-          ));
+          );
         },
         child: child);
   }

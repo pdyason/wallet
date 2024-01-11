@@ -11,7 +11,6 @@ class BankCardType {
     required this.lengths,
   });
 
-  // TODO error
   factory BankCardType.fromJson(Map<String, dynamic> json) {
     return BankCardType(
       type: json['type'],
@@ -31,7 +30,6 @@ class BankCardType {
   @override
   String toString() => type;
 
-  // TODO error
   List<String> getPrefixes() {
     var pn = prefixNumbers.toList();
     List<String> pr = [];

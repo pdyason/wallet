@@ -1,15 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:wallet/data/models/bank_card.dart';
 import 'package:wallet/data/redux/state.dart';
 
 sealed class AppAction {}
-
-// class Undo extends AppAction {
-//   final AppState prevState;
-
-//   Undo(this.prevState);
-//   @override
-//   String toString() => 'Undo';
-// }
 
 class SetAppState extends AppAction {
   final AppState newState;
@@ -39,30 +32,18 @@ class LoadSavedData extends AppAction {
 
 class UpdateCardList extends AppAction {
   final List<BankCard> cards;
-  UpdateCardList(this.cards);
+  final List<BankCard> newCards;
+  UpdateCardList({required this.cards, required this.newCards});
   @override
   String toString() => 'UpdateCardList';
 }
 
-class UpdateNewCardList extends AppAction {
-  final List<BankCard> newCards;
-  UpdateNewCardList(this.newCards);
-  @override
-  String toString() => 'UpdateNewCardList';
-}
-
 class CardListUpdated extends AppAction {
   final List<BankCard> cards;
-  CardListUpdated(this.cards);
+  final List<BankCard> newCards;
+  CardListUpdated({required this.cards, required this.newCards});
   @override
   String toString() => 'CardListUpdated';
-}
-
-class NewCardListUpdated extends AppAction {
-  final List<BankCard> newCards;
-  NewCardListUpdated(this.newCards);
-  @override
-  String toString() => 'NewCardListUpdated';
 }
 
 class UpdateAllCountryList extends AppAction {
@@ -95,7 +76,8 @@ class AddCard extends AppAction {
 
 class RemoveCard extends AppAction {
   final BankCard card;
-  RemoveCard(this.card);
+  final VoidCallback? onRemoved;
+  RemoveCard(this.card, {this.onRemoved});
   @override
   String toString() => 'RemoveCard';
 }
@@ -109,7 +91,8 @@ class AddBannedCountry extends AppAction {
 
 class RemoveBannedCountry extends AppAction {
   final String country;
-  RemoveBannedCountry(this.country);
+  final VoidCallback? onRemoved;
+  RemoveBannedCountry(this.country, {this.onRemoved});
   @override
   String toString() => 'RemoveBannedCountry';
 }

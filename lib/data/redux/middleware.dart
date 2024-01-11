@@ -56,7 +56,7 @@ _loadSampleCard(Store<AppState> store) {
 
 _loadSavedData(Store<AppState> store) async {
   try {
-    store.dispatch(UpdateCardList(await SharedPrefs.fetchCardList()));
+    store.dispatch(UpdateCardList(cards: await SharedPrefs.fetchCardList(), newCards: []));
     store.dispatch(UpdateBannedList(await SharedPrefs.fetchBannedList()));
   } catch (e) {
     store.dispatch(CatchException(e));
@@ -66,7 +66,7 @@ _loadSavedData(Store<AppState> store) async {
 _updateCardList(Store<AppState> store, UpdateCardList action) async {
   try {
     await SharedPrefs.saveCardList(action.cards);
-    store.dispatch(CardListUpdated(action.cards));
+    store.dispatch(CardListUpdated(cards: action.cards, newCards: action.newCards));
   } catch (e) {
     store.dispatch(CatchException(e));
   }
@@ -82,17 +82,20 @@ _updateBannedList(Store<AppState> store, UpdateBannedList action) async {
 }
 
 _addCard(Store<AppState> store, AddCard action) {
-  // check if card already exists
-  //TODO// if (store.state.cards.map((c) => c.number).toList().contains(action.card.number)) return;
-  // add to new cards list
-  store.dispatch(NewCardListUpdated(List.from(store.state.newCards)..add(action.card)));
-  store.dispatch(UpdateCardList(List.from(store.state.cards)..add(action.card)));
+  // ignore if card already exists
+  if (store.state.cards.map((c) => c.number).toList().contains(action.card.number)) return;
+  store.dispatch(UpdateCardList(
+    cards: List.from(store.state.cards)..add(action.card),
+    newCards: List.from(store.state.newCards)..add(action.card),
+  ));
 }
 
-_removeCard(Store<AppState> store, RemoveCard action) {
-  store.dispatch(
-      NewCardListUpdated(List.from(store.state.newCards)..removeWhere((c) => c.number == action.card.number)));
-  store.dispatch(UpdateCardList(List.from(store.state.cards)..removeWhere((c) => c.number == action.card.number)));
+_removeCard(Store<AppState> store, RemoveCard action) async {
+  store.dispatch(UpdateCardList(
+    cards: List.from(store.state.cards)..removeWhere((c) => c.number == action.card.number),
+    newCards: List.from(store.state.newCards)..removeWhere((c) => c.number == action.card.number),
+  ));
+  action.onRemoved?.call();
 }
 
 _addBannedCountry(Store<AppState> store, AddBannedCountry action) {
@@ -103,10 +106,13 @@ _addBannedCountry(Store<AppState> store, AddBannedCountry action) {
 
 _removeBannedCountry(Store<AppState> store, RemoveBannedCountry action) {
   store.dispatch(UpdateBannedList(List.from(store.state.bannedCountries)..removeWhere((c) => c == action.country)));
+  action.onRemoved?.call();
 }
 
 _setAppState(Store<AppState> store, SetAppState action) {
   store.dispatch(UpdateBannedList(List.from(action.newState.bannedCountries)));
-  store.dispatch(UpdateCardList(List.from(action.newState.cards)));
-  store.dispatch(NewCardListUpdated(List.from(action.newState.newCards)));
+  store.dispatch(UpdateCardList(
+    cards: List.from(action.newState.cards),
+    newCards: List.from(action.newState.newCards),
+  ));
 }

@@ -13,11 +13,20 @@ class CountryTile extends StatelessWidget {
     return Dismissible(
       key: Key(country),
       onDismissed: (direction) {
-        StoreProvider.of<AppState>(context).dispatch(RemoveBannedCountry(country));
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Removed $country'),
-          duration: const Duration(milliseconds: 1000),
-        ));
+        StoreProvider.of<AppState>(context).dispatch(
+          RemoveBannedCountry(
+            country,
+            onRemoved: () {
+              // Then show a snackbar
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Removed $country'),
+                  duration: const Duration(milliseconds: 1000),
+                ),
+              );
+            },
+          ),
+        );
       },
       child: Container(
         margin: const EdgeInsets.only(left: 20, right: 20, bottom: 15),
