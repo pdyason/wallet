@@ -1,11 +1,11 @@
 {
-    "name": "wallet",
-    "short_name": "wallet",
+    "name": "Wallet",
+    "short_name": "Wallet",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "A Flutter and Redux app",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
