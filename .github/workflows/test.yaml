@@ -9,12 +9,13 @@ jobs:
     - run: flutter test
     - run: flutter build web
     - name: Pushes to web repository
-      uses: cpina/github-action-push-to-another-repository@main
-      env: 
+      uses: tech-thinker/push-to-repo@main
+      env:
         API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
       with:
-        source-directory: 'build/web'
-        destination-github-username: 'pdyason'
-        destination-repository-name: 'wallet-web'
-        user-email: PDyason
+        user-name: "github-actions"
+        user-email: github-actions@users.noreply.github.com
+        source-directory: "build/web"
+        destination-github-username: "pdyason"
+        destination-repository-name: "wallet-web"
         target-branch: main
