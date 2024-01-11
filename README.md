@@ -8,6 +8,7 @@ An example wallet app to capture, validate, and store cards using Flutter and Re
 
 - Add cards and banned countries
 - Swipe to delete
+- Card info is store locally only and is encrypted
 
 ## Objectives
 
@@ -16,10 +17,13 @@ An example wallet app to capture, validate, and store cards using Flutter and Re
 - Limit 3rd party packages
 - Apply specified checks on cards
 
-## Notes
+## About
 
-- Performace is good enough not to warrent further optimisation
-- Comments, exhaustive checks, and tests are kept to a minimum
+Developed by Pieter Dyason
+
+GitHub: [pdyason/wallet](https://github.com/pdyason/wallet)
+
+WebApp: [pdyason.github.io/wallet-web](https://pdyason.github.io/wallet-web/)
 
 ## Tests
 
@@ -29,11 +33,23 @@ iOS requires additional permissions
 
 Run Tests: `flutter test -r github`
 
-Automated tests in Github Workflows
+Automated tests in Github
 
 - Unit Test
 - Widget Test
 - Integration Test
+
+## GitHub Actions CI/CD
+
+- Automated testing when deployed
+- Build a web version and deploy to pdyason.github.io/wallet-web
+
+`The web version is not optimized and does not support card scanning`
+
+## Notes
+
+- Performace is good enough not to warrent further optimisation
+- Comments, exhaustive checks, and tests are kept to a minimum
 
 ## Dependencies
 

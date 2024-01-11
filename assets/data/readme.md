@@ -6,9 +6,14 @@ An example wallet app to capture, validate, and store cards using Flutter and Re
 
 - Add cards and banned countries
 - Swipe to delete
+- Card info is store locally only and is encrypted
 
-## Credits
+## About
 
 Developed by Pieter Dyason
 
-Github pdyason/wallet
+GitHub: pdyason/wallet
+
+WebApp: pdyason.github.io/wallet-web
+
+Version 1.0.4

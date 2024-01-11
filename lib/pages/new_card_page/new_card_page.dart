@@ -6,6 +6,7 @@ import 'package:wallet/app/utils.dart';
 import 'package:wallet/data/models/bank_card.dart';
 import 'package:wallet/data/redux/actions.dart';
 import 'package:wallet/data/redux/state.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class NewCardPage extends StatelessWidget {
   const NewCardPage({super.key});
@@ -96,7 +97,8 @@ class _NewCardFormState extends State<NewCardForm> {
         key: _formKey,
         child: Column(
           children: [
-            _buildScanButton(),
+            if (kIsWeb) _buildEnterCardLabel(),
+            if (!kIsWeb) _buildScanButton(),
             const SizedBox(height: 20),
             _buildAlias(),
             _buildNumber(),
@@ -120,6 +122,24 @@ class _NewCardFormState extends State<NewCardForm> {
     } catch (e) {
       debug('Scanning card failed: $e');
     }
+  }
+
+  Widget _buildEnterCardLabel() {
+    return Container(
+      width: 200.0,
+      height: 50.0,
+      decoration: BoxDecoration(
+        color: Styles.cardBackgroundColor,
+        borderRadius: BorderRadius.circular(50),
+        border: Border.all(color: Styles.cardBorderColor),
+      ),
+      child: const Center(
+        child: Text(
+          'Enter Card Details',
+          style: TextStyle(fontSize: 20),
+        ),
+      ),
+    );
   }
 
   Widget _buildScanButton() {
