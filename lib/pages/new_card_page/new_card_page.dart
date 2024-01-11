@@ -50,7 +50,7 @@ class NewCardForm extends StatefulWidget {
 
 class _NewCardFormState extends State<NewCardForm> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _aliasController = TextEditingController();
+  final TextEditingController _labelController = TextEditingController();
   final TextEditingController _numberController = TextEditingController();
   final TextEditingController _typeController = TextEditingController();
   final TextEditingController _ccvController = TextEditingController();
@@ -80,7 +80,7 @@ class _NewCardFormState extends State<NewCardForm> {
     }
   }
 
-  String? _validateAlias(String? value) {
+  String? _validateLabel(String? value) {
     if (value == null || value.length > 10) {
       return 'Maximum 10 characters';
     }
@@ -100,7 +100,7 @@ class _NewCardFormState extends State<NewCardForm> {
 
   String? _validateType(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Enter a card issuer (Visa)';
+      return 'Enter a card type (Visa)';
     } else if (value.length > 15) {
       return 'Maximum 15 characters';
     }
@@ -116,7 +116,7 @@ class _NewCardFormState extends State<NewCardForm> {
 
   String? _validateCountry(value) {
     if (value == null || value.isEmpty) {
-      return 'Select a Country';
+      return 'Select an available country';
     } else if (!widget.availableCountries.contains(value)) {
       return 'Cards from this country are not allowed';
     }
@@ -134,7 +134,7 @@ class _NewCardFormState extends State<NewCardForm> {
             if (kIsWeb) _buildEnterCardLabel(),
             if (!kIsWeb) _buildScanButton(),
             const SizedBox(height: 20),
-            _buildAlias(),
+            _buildLabel(),
             _buildNumber(),
             _buildType(),
             _buildCCV(),
@@ -152,7 +152,7 @@ class _NewCardFormState extends State<NewCardForm> {
       Map<String, String>? cardDetails = await Utils.scanCard();
       if (cardDetails != null) {
         _numberController.text = cardDetails['cardNumber'].toString();
-        _aliasController.text = cardDetails['cardHolderName'].toString();
+        _labelController.text = cardDetails['cardHolderName'].toString();
       }
     } catch (e) {
       debug('Scanning card failed: $e');
@@ -193,14 +193,14 @@ class _NewCardFormState extends State<NewCardForm> {
     );
   }
 
-  TextFormField _buildAlias() {
+  TextFormField _buildLabel() {
     return TextFormField(
-      controller: _aliasController,
+      controller: _labelController,
       decoration: const InputDecoration(
-        labelText: 'Enter Alias (Optional)',
+        labelText: 'Enter a Label (Optional)',
       ),
       keyboardType: TextInputType.name,
-      validator: _validateAlias,
+      validator: _validateLabel,
     );
   }
 
@@ -219,7 +219,7 @@ class _NewCardFormState extends State<NewCardForm> {
     return TextFormField(
       controller: _typeController,
       decoration: const InputDecoration(
-        labelText: 'Enter Card Issuer',
+        labelText: 'Enter Card Type',
       ),
       keyboardType: TextInputType.name,
       validator: _validateType,
@@ -263,7 +263,7 @@ class _NewCardFormState extends State<NewCardForm> {
           StoreProvider.of<AppState>(context).dispatch(
             AddCard(
               BankCard(
-                alias: _aliasController.text,
+                label: _labelController.text,
                 number: _numberController.text,
                 ccv: _ccvController.text,
                 country: _selectedCountry ?? '',

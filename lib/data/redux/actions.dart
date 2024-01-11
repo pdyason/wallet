@@ -20,9 +20,11 @@ class CatchException extends AppAction {
   String toString() => 'CatchException';
 }
 
-class LoadSampleCard extends AppAction {
+class AddSampleCard extends AppAction {
+  final VoidCallback? onAdded;
+  AddSampleCard({this.onAdded});
   @override
-  String toString() => 'LoadSampleCard';
+  String toString() => 'AddSampleCard';
 }
 
 class LoadSavedData extends AppAction {

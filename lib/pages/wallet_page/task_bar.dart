@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:wallet/app/styles.dart';
+import 'package:wallet/data/models/bank_card.dart';
 import 'package:wallet/data/redux/actions.dart';
 import 'package:wallet/data/redux/state.dart';
 import 'package:wallet/app/constants.dart';
@@ -26,39 +27,6 @@ class _TaskBarState extends State<TaskBar> {
       child: _buildTaskMenu(),
     );
   }
-
-  List<Widget> _menuOptions() => [
-        if (Constants.featureLoadSampleData)
-          MenuButton(
-            text: 'Load Sample Card',
-            iconData: Icons.arrow_right,
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text('Loading Sample Data'),
-                duration: Duration(milliseconds: 1000),
-              ));
-              StoreProvider.of<AppState>(context).dispatch(LoadSampleCard());
-            },
-          ),
-        if (Constants.featureBannedCountries)
-          MenuButton(
-            text: 'Banned Countries',
-            iconData: Icons.arrow_right,
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const BannedPage()),
-            ),
-          ),
-        if (Constants.featureReademe)
-          MenuButton(
-            text: 'Readme',
-            iconData: Icons.arrow_right,
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const ReadmePage()),
-            ),
-          ),
-      ];
 
   Widget _buildTaskMenu() {
     return Container(
@@ -112,6 +80,52 @@ class _TaskBarState extends State<TaskBar> {
       ),
     );
   }
+
+  List<Widget> _menuOptions() => [
+        if (Constants.featureBannedCountries)
+          MenuButton(
+            text: 'Banned Countries',
+            iconData: Icons.arrow_right,
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const BannedPage()),
+            ),
+          ),
+        if (Constants.featureLoadSampleData)
+          StoreConnector<AppState, AppState>(
+            converter: (store) => store.state,
+            builder: (context, state) => MenuButton(
+              text: 'Add Sample Card',
+              iconData: Icons.arrow_right,
+              onPressed: () {
+                if (state.cards.where((card) => card.number == BankCard.sample().number).isNotEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    content: Text('Sample card already added'),
+                    duration: Duration(milliseconds: 1000),
+                  ));
+                  return;
+                }
+                StoreProvider.of<AppState>(context).dispatch(AddSampleCard(
+                  onAdded: () {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text('Sample card added'),
+                      duration: Duration(milliseconds: 1000),
+                    ));
+                  },
+                ));
+              },
+            ),
+          ),
+        if (Constants.featureReademe)
+          MenuButton(
+            text: 'Readme',
+            iconData: Icons.arrow_right,
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ReadmePage()),
+            ),
+          ),
+      ];
 }
 
 class MenuButton extends StatelessWidget {

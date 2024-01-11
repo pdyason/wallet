@@ -26,7 +26,7 @@ void main() {
       await tester.pumpAndSettle(const Duration(milliseconds: 500));
       await tester.tap(find.byIcon(Icons.more_vert));
       await tester.pumpAndSettle(const Duration(milliseconds: 500));
-      await tester.tap(find.text('Load Sample Card'));
+      await tester.tap(find.text('Add Sample Card'));
       await tester.pumpAndSettle(const Duration(milliseconds: 500));
       expect(find.text('4242 4242 4242 4242'), findsOne);
     });

@@ -40,8 +40,8 @@ void appStateMiddleware(Store<AppState> store, dynamic action, NextDispatcher ne
     case UpdateBannedList:
       _updateBannedList(store, action); // unawaited
     // Samples
-    case LoadSampleCard:
-      _loadSampleCard(store);
+    case AddSampleCard:
+      _addSampleCard(store, action);
     // Saved
     case LoadSavedData:
       _loadSavedData(store); // unawaited
@@ -50,8 +50,9 @@ void appStateMiddleware(Store<AppState> store, dynamic action, NextDispatcher ne
   }
 }
 
-_loadSampleCard(Store<AppState> store) {
+_addSampleCard(Store<AppState> store, AddSampleCard action) {
   store.dispatch(AddCard(BankCard.sample()));
+  action.onAdded?.call();
 }
 
 _loadSavedData(Store<AppState> store) async {

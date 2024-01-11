@@ -24,7 +24,7 @@ class BankCardTile extends StatelessWidget {
           // Top-left corner widget
           Positioned(top: 0, left: 0, child: CardTypeWidget(card: card)),
           // Top-right corner widget
-          Positioned(top: 0, right: 0, child: CardAliasWidget(card: card, isNewlyAdded: isNewlyAdded)),
+          Positioned(top: 0, right: 0, child: CardLabelWidget(card: card, isNewlyAdded: isNewlyAdded)),
           // Bottom-left corner widget
           Positioned(bottom: 0, left: 0, child: CardCountryWidget(card: card)),
           // Bottom-right corner widget
@@ -71,8 +71,8 @@ class CardNumberWidget extends StatelessWidget {
   }
 }
 
-class CardAliasWidget extends StatelessWidget {
-  const CardAliasWidget({super.key, required this.card, required this.isNewlyAdded});
+class CardLabelWidget extends StatelessWidget {
+  const CardLabelWidget({super.key, required this.card, required this.isNewlyAdded});
   final BankCard card;
   final bool isNewlyAdded;
   @override
@@ -81,7 +81,7 @@ class CardAliasWidget extends StatelessWidget {
     return Row(children: [
       if (isNewlyAdded) Text('*', style: textStyle),
       const SizedBox(width: 10),
-      Text(card.alias, style: textStyle),
+      Text(card.label, style: textStyle),
     ]);
   }
 }
