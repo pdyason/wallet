@@ -13,9 +13,8 @@ void loggingMiddleware(Store<AppState> store, dynamic action, NextDispatcher nex
 
 // print exception
 void catchExceptionMiddleware(Store<AppState> store, dynamic action, NextDispatcher next) {
-  debug('++ Exception: $action');
   if (action is CatchException) {
-    debug(action.e.toString(), isError: true);
+    debug('!! Exception: $action', isError: true);
   } else {
     next(action);
   }

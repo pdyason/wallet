@@ -87,7 +87,7 @@ class DismissibleTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dismissible(
-        key: Key(card.toString()),
+        key: UniqueKey(),
         onDismissed: (direction) {
           StoreProvider.of<AppState>(context).dispatch(RemoveCard(card));
           // Then show a snackbar. //TODO

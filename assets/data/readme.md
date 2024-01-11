@@ -15,5 +15,3 @@ Developed by Pieter Dyason
 GitHub: pdyason/wallet
 
 WebApp: pdyason.github.io/wallet-web
-
-Version 1.0.4

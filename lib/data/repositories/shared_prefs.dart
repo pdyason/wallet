@@ -1,27 +1,34 @@
 import 'package:wallet/data/models/bank_card.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class SharedPrefs {
+  static const androidOptions = AndroidOptions(encryptedSharedPreferences: true);
+  static const storage = FlutterSecureStorage(aOptions: androidOptions);
+
   static Future<void> saveCardList(List<BankCard> cards) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setStringList('CardList', cards.map((c) => jsonEncode(c.toJson())).toList());
+    await storage.write(
+      key: 'CardList',
+      value: jsonEncode(cards.map((c) => jsonEncode(c.toJson())).toList()),
+    );
   }
 
   static Future<List<BankCard>> fetchCardList() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> cards = prefs.getStringList('CardList') ?? [];
+    var jsonStr = await storage.read(key: 'CardList');
+    List<String> cards = jsonStr != null ? jsonDecode(jsonStr).cast<String>() : [];
     return cards.map((c) => BankCard.fromJson(jsonDecode(c))).toList();
   }
 
   static Future<void> saveBannedList(List<String> banned) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setStringList('BannedList', banned);
+    await storage.write(
+      key: 'BannedList',
+      value: jsonEncode(banned),
+    );
   }
 
   static Future<List<String>> fetchBannedList() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> banned = prefs.getStringList('BannedList') ?? [];
+    var jsonStr = await storage.read(key: 'BannedList');
+    List<String> banned = jsonStr != null ? jsonDecode(jsonStr).cast<String>() : [];
     return banned;
   }
 }

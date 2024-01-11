@@ -1,4 +1,6 @@
-<a href="https://github.com/pdyason/wallet/actions"><img src="https://github.com/pdyason/wallet/workflows/test-wallet/badge.svg" alt="Build Status"></a>
+<a href="https://github.com/pdyason/wallet/actions">
+    <img src="https://github.com/pdyason/wallet/workflows/test-wallet/badge.svg" alt="Build Status">
+</a>
 
 # Wallet
 
@@ -57,6 +59,6 @@ Automated tests in Github
 - Flutter: 3.2.3
 - redux: 5.0.0
 - flutter_redux: 0.10.0
-- shared_preferences: 2.2.2
+- flutter_secure_storage: 9.0.0
 - flutter_markdown: 0.6.18+3
 - credit_card_scanner: 1.0.5

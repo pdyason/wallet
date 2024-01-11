@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet/app/app.dart';
 import 'package:wallet/app/globals.dart' as globals;
 import 'package:wallet/data/redux/store.dart';
 
 void main() {
-  SharedPreferences.setMockInitialValues({});
+  FlutterSecureStorage.setMockInitialValues({});
   globals.allowDebugPrints = false;
 
   testWidgets('Navigate to Add Bank Card Page', (WidgetTester tester) async {
