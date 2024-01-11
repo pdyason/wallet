@@ -18,4 +18,4 @@ jobs:
         source-directory: "build/web"
         destination-github-username: "pdyason"
         destination-repository-name: "wallet-web"
-        target-branch: main
+        target-branch: master
