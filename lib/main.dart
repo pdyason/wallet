@@ -10,11 +10,6 @@ import 'package:wallet/data/redux/store.dart';
 import 'app/app.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
-// TODO infer card type *
-// TODO action callbacks for alerts *
-// TODO add basic encryption **
-// TODO wait for loads to finish **
-
 void main() async {
   // initialize Redux store
   final store = AppStore.init();
@@ -22,22 +17,13 @@ void main() async {
   // initialize Widgets Binding
   WidgetsFlutterBinding.ensureInitialized();
 
-  // load saved data //TODO
+  // load saved data
   store.dispatch(LoadSavedData());
 
   // run flutter app
   if (kIsWeb) {
     // run flutter app for web
-    runApp(
-      // set portrait mode
-      Center(
-        child: SizedBox(
-          height: 700,
-          width: 400,
-          child: App(store),
-        ),
-      ),
-    );
+    runApp(Center(child: SizedBox(height: 700, width: 400, child: App(store))));
   } else {
     // set portrait mode
     if (io.Platform.isAndroid || io.Platform.isIOS) {

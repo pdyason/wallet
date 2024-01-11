@@ -6,7 +6,7 @@ An example wallet app to capture, validate, and store cards using Flutter and Re
 
 - Add cards and banned countries
 - Swipe to delete
-- Card info is store locally only and is encrypted
+- Card information is stored locally only and is encrypted
 
 ## About
 

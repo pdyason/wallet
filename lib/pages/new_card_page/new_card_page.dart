@@ -4,9 +4,11 @@ import 'package:wallet/app/constants.dart';
 import 'package:wallet/app/styles.dart';
 import 'package:wallet/app/utils.dart';
 import 'package:wallet/data/models/bank_card.dart';
+import 'package:wallet/data/models/bank_card_type.dart';
 import 'package:wallet/data/redux/actions.dart';
 import 'package:wallet/data/redux/state.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:wallet/data/repositories/asset_data.dart';
 
 class NewCardPage extends StatelessWidget {
   const NewCardPage({super.key});
@@ -50,14 +52,37 @@ class _NewCardFormState extends State<NewCardForm> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _aliasController = TextEditingController();
   final TextEditingController _numberController = TextEditingController();
+  final TextEditingController _typeController = TextEditingController();
   final TextEditingController _ccvController = TextEditingController();
   String? _selectedCountry;
 
-  // TODO add to validations
+  @override
+  void initState() {
+    super.initState();
+    // listen to card number changes
+    _numberController.addListener(_onCardNumberChanged);
+  }
 
-  String? _validateCCV(String? value) {
-    if (value == null || value.length != 3 || !RegExp(r'^[0-9]+$').hasMatch(value)) {
-      return 'Enter a valid 3 digit CCV';
+  Future<void> _onCardNumberChanged() async {
+    // only check for type if length is > 10
+    if (_numberController.text.length > 10) {
+      List<BankCardType> types = await AssetData.getIssuerTypes();
+      for (var type in types) {
+        if (type.lengths.contains(_numberController.text.length)) {
+          for (var prefix in type.getPrefixes()) {
+            if (_numberController.text.startsWith(prefix)) {
+              _typeController.text = type.type;
+              return;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  String? _validateAlias(String? value) {
+    if (value == null || value.length > 10) {
+      return 'Maximum 10 characters';
     }
     return null;
   }
@@ -73,16 +98,23 @@ class _NewCardFormState extends State<NewCardForm> {
     return null;
   }
 
-  String? _validateAlias(String? value) {
-    if (value == null || value.length > 10) {
-      return 'Maximum 10 characters';
+  String? _validateType(String? value) {
+    if (value == null || value.length > 15) {
+      return 'Maximum 15 characters';
+    }
+    return null;
+  }
+
+  String? _validateCCV(String? value) {
+    if (value == null || value.length != 3 || !RegExp(r'^[0-9]+$').hasMatch(value)) {
+      return 'Enter a valid 3 digit CCV';
     }
     return null;
   }
 
   String? _validateCountry(value) {
     if (value == null || value.isEmpty) {
-      return 'Select a country';
+      return 'Select a Country';
     } else if (!widget.availableCountries.contains(value)) {
       return 'Cards from this country are not allowed';
     }
@@ -102,6 +134,7 @@ class _NewCardFormState extends State<NewCardForm> {
             const SizedBox(height: 20),
             _buildAlias(),
             _buildNumber(),
+            _buildType(),
             _buildCCV(),
             _buildCountry(),
             const SizedBox(height: 20),
@@ -158,51 +191,6 @@ class _NewCardFormState extends State<NewCardForm> {
     );
   }
 
-  DropdownButtonFormField<String> _buildCountry() {
-    return DropdownButtonFormField<String>(
-      value: _selectedCountry,
-      onChanged: (value) {
-        setState(() {
-          _selectedCountry = value;
-        });
-      },
-      items: widget.availableCountries.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-      decoration: const InputDecoration(labelText: 'Select a country'),
-      validator: _validateCountry,
-    );
-  }
-
-  ElevatedButton _buildButton(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {
-        if (_formKey.currentState!.validate()) {
-          debug('Alias:   ${_aliasController.text}');
-          debug('Number:  ${_numberController.text}');
-          debug('CCV:     ${_ccvController.text}');
-          debug('Country: $_selectedCountry');
-          StoreProvider.of<AppState>(context).dispatch(
-            AddCard(
-              BankCard(
-                alias: _aliasController.text,
-                number: _numberController.text,
-                ccv: _ccvController.text,
-                country: _selectedCountry ?? '',
-                type: 'Bank Card',
-              ),
-            ),
-          );
-          Navigator.pop(context);
-        }
-      },
-      child: const Text('Confirm'),
-    );
-  }
-
   TextFormField _buildAlias() {
     return TextFormField(
       controller: _aliasController,
@@ -211,6 +199,28 @@ class _NewCardFormState extends State<NewCardForm> {
       ),
       keyboardType: TextInputType.name,
       validator: _validateAlias,
+    );
+  }
+
+  TextFormField _buildNumber() {
+    return TextFormField(
+      controller: _numberController,
+      decoration: const InputDecoration(
+        labelText: 'Enter Card Number',
+      ),
+      keyboardType: TextInputType.number,
+      validator: _validateNumber,
+    );
+  }
+
+  TextFormField _buildType() {
+    return TextFormField(
+      controller: _typeController,
+      decoration: const InputDecoration(
+        labelText: 'Enter Card Type',
+      ),
+      keyboardType: TextInputType.name,
+      validator: _validateType,
     );
   }
 
@@ -225,14 +235,44 @@ class _NewCardFormState extends State<NewCardForm> {
     );
   }
 
-  TextFormField _buildNumber() {
-    return TextFormField(
-      controller: _numberController,
-      decoration: const InputDecoration(
-        labelText: 'Enter Number',
-      ),
-      keyboardType: TextInputType.number,
-      validator: _validateNumber,
+  DropdownButtonFormField<String> _buildCountry() {
+    return DropdownButtonFormField<String>(
+      value: _selectedCountry,
+      onChanged: (value) {
+        setState(() {
+          _selectedCountry = value;
+        });
+      },
+      items: widget.availableCountries.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+      decoration: const InputDecoration(labelText: 'Select a Country'),
+      validator: _validateCountry,
+    );
+  }
+
+  ElevatedButton _buildButton(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {
+        if (_formKey.currentState!.validate()) {
+          StoreProvider.of<AppState>(context).dispatch(
+            AddCard(
+              BankCard(
+                alias: _aliasController.text,
+                number: _numberController.text,
+                ccv: _ccvController.text,
+                country: _selectedCountry ?? '',
+                type: _typeController.text,
+              ),
+            ),
+          );
+          Navigator.pop(context);
+        }
+      },
+      child: const Text('Confirm'),
     );
   }
 }
