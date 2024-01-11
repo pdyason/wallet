@@ -8,12 +8,13 @@ jobs:
     - uses: subosito/flutter-action@v1
     - run: flutter test
     - run: flutter build web
-    - run: cd build
-    - run: cd web
-    - run: git config --global user.email "actions@github.com"
-    - run: git config --global user.name "GitHub Actions"
-    - run: git init
-    - run: git remote add origin https://github.com/pdyason/wallet-web.git
-    - run: git add .
-    - run: git commit -m "Deployment"
-    - run: git push --force --set-upstream origin master
+    - name: Pushes to web repository
+      uses: cpina/github-action-push-to-another-repository@main
+      env: 
+        API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+      with:
+        source-directory: 'build/web'
+        destination-github-username: 'pdyason'
+        destination-repository-name: 'wallet-web'
+        user-email: PDyason
+        target-branch: main
