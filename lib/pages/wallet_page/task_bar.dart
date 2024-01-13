@@ -5,7 +5,6 @@ import 'package:wallet/data/models/bank_card.dart';
 import 'package:wallet/data/redux/actions.dart';
 import 'package:wallet/data/redux/state.dart';
 import 'package:wallet/app/constants.dart';
-import 'package:wallet/pages/new_card_page/new_card_page.dart';
 import 'package:wallet/pages/pages.dart';
 
 class TaskBar extends StatefulWidget {
