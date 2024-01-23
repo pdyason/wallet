@@ -43,14 +43,14 @@ Automated tests in Github
 
 ## GitHub Actions CI/CD
 
-- Automated testing when deployed
+- Automated testing and deployment
 - Build a web version and deploy to pdyason.github.io/wallet-web
 
 `The web version is not optimized and does not support card scanning`
 
 ## Notes
 
-- Performace is good enough not to warrent further optimisation
+- Performance is good enough not to warrant further optimization
 - Comments, exhaustive checks, and tests are kept to a minimum
 
 ## Dependencies
